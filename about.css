@@ -1,0 +1,27 @@
+/* General Styles */
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #333;
+  background-color: #f4f4f9;
+}
+
+/* Main Styles */
+h1.display-4 {
+  margin-bottom: 20px;
+}
+
+p.lead {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.font-weight-bold {
+  font-weight: 600;
+}
+
+/* Footer Styles */
+footer p {
+  margin: 0;
+  font-size: 0.9em;
+}

@@ -4,6 +4,29 @@
   box-sizing: border-box;
 }
 
+.scrollToTopBtn {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s;
+}
+
+.scrollToTopBtn:hover {
+  background-color: #0056b3;
+}
+
 /* Hero Section Animation */
 #hero {
   animation: fadeIn 2s ease-in-out;
@@ -118,6 +141,16 @@ footer {
   display: none;
 }
 
+.loginBtn,
+.signupBtn {
+  display: none;
+}
+
+body.js-enabled .loginBtn,
+body.js-enabled .signupBtn {
+  display: block;
+}
+
 #products {
   height: auto;
   padding-top: 20px;
@@ -203,10 +236,15 @@ footer {
   vertical-align: middle;
 }
 
+#loginPop form input[type="checkbox"] {
+  padding: 0px;
+}
+
 #loginPop .remember-checkbox {
   margin-left: 5px;
   display: flex;
   gap: 6px;
+  align-items: center;
 }
 
 #loginPop .createNowLinkSpan {

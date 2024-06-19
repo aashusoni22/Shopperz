@@ -35,48 +35,64 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartSection = document.querySelector(".cartSection");
   const mainContent = document.querySelector("#mainContent");
   const cartCount = document.querySelector(".cart-count");
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
   let cartItems = [];
-
-  // Function to check if the sign-up popup should be shown
-  function shouldShowSignUp() {
-    if (
-      loginBtn.style.display !== "none" &&
-      signupBtn.style.display !== "none"
-    ) {
-      // Retrieve the count of refreshes from localStorage
-      let refreshCount = localStorage.getItem("refreshCount");
-
-      // If refreshCount is not set or is less than 4, return false
-      if (!refreshCount || refreshCount < 3) {
-        return false;
-      }
-
-      // If refreshCount is 4 or 5, reset it to 0 and return true
-      if (refreshCount >= 3 && refreshCount <= 4) {
-        localStorage.setItem("refreshCount", 0); // Reset the count
-        return true;
-      }
-    }
-  }
-
-  // Increment refresh count in localStorage
-  function incrementRefreshCount() {
-    let refreshCount = localStorage.getItem("refreshCount");
-    refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
-    localStorage.setItem("refreshCount", refreshCount);
-  }
-
-  // Check if it's time to show the sign-up popup
-  if (shouldShowSignUp()) {
-    signUpPop.style.display = "block";
-    mainContent.style.opacity = "40%";
-  }
-
-  // Increment refresh count
-  incrementRefreshCount();
-
   let logoutTimer;
 
+  document.body.classList.add("js-enabled");
+
+  // // Function to check if the sign-up popup should be shown
+  // function shouldShowSignUp() {
+  //   if (isUserLoggedIn) {
+  //     // Retrieve the count of refreshes from localStorage
+
+  //     let refreshCount = localStorage.getItem("refreshCount");
+  //     // If refreshCount is not set or is less than 4, return false
+  //     if (!refreshCount || refreshCount < 3) {
+  //       return false;
+  //     }
+
+  //     // If refreshCount is 4 or 5, reset it to 0 and return true
+  //     if (refreshCount >= 3 && refreshCount <= 4) {
+  //       localStorage.setItem("refreshCount", 0); // Reset the count
+  //       return true;
+  //     }
+  //   }
+  // }
+
+  // // Increment refresh count in localStorage
+  // function incrementRefreshCount() {
+  //   let refreshCount = localStorage.getItem("refreshCount");
+  //   refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
+  //   localStorage.setItem("refreshCount", refreshCount);
+  // }
+
+  // // Check if it's time to show the sign-up popup
+  // if (shouldShowSignUp()) {
+  //   signUpPop.style.display = "block";
+  //   mainContent.style.opacity = "40%";
+  // }
+
+  // if (isUserLoggedIn) {
+  //   // Increment refresh count
+  //   incrementRefreshCount();
+  // }
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 200) {
+      scrollToTopBtn.style.display = "flex";
+    } else {
+      scrollToTopBtn.style.display = "none";
+    }
+  });
+
+  scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  const sessionModal = new bootstrap.Modal(
+    document.getElementById("sessionModal")
+  );
   // Function to reset the logout timer
   function resetLogoutTimer() {
     clearTimeout(logoutTimer);
@@ -86,14 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
         loggedInProfile.style.display === "flex"
       ) {
         // Show the Bootstrap modal
-        const sessionModal = new bootstrap.Modal(
-          document.getElementById("sessionModal")
-        );
 
         sessionModal.show();
 
         setTimeout(() => {
           sessionModal.hide();
+          logout();
         }, 50000);
 
         document
@@ -138,6 +152,26 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keypress", resetLogoutTimer);
   document.addEventListener("scroll", resetLogoutTimer);
   document.addEventListener("click", resetLogoutTimer);
+  document.addEventListener("mousedown", resetLogoutTimer);
+  document.addEventListener("mouseup", resetLogoutTimer);
+
+  window.addEventListener("load", () => {
+    resetLogoutTimer();
+    const remember = localStorage.getItem("rememberMe") === "true";
+    const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+    if (remember && isUserLoggedIn) {
+      loggedInProfile.style.display = "flex";
+      loggedUsername.textContent = loggedInUserEmail;
+      loginBtn.style.display = "none";
+      signupBtn.style.display = "none";
+      shoppingCartMenu.style.display = "flex";
+      cartCount.style.display = "block";
+    } else {
+      loginBtn.style.display = "block";
+      signupBtn.style.display = "block";
+    }
+    loadCartFromLocalStorage();
+  });
 
   async function fetchProducts() {
     fetch("https://fakestoreapi.com/products")
@@ -351,14 +385,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function isUserLoggedIn() {
-    if (loggedUsername.style.display === "block") return true;
-    else return false;
+    return loggedInProfile.style.display === "flex";
   }
 
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     loginPop.style.display = "block";
     mainContent.style.opacity = "30%";
+    loginEmail.focus();
     if (signUpPop.style.display == "block") {
       signUpPop.style.display = "none";
     }
@@ -368,6 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     signUpPop.style.display = "block";
     mainContent.style.opacity = "30%";
+    signUpUsername.focus();
     if (loginPop.style.display == "block") {
       loginPop.style.display = "none";
     }
@@ -440,10 +475,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loginPopBtn.addEventListener("click", (e) => {
     e.preventDefault();
-
     const email = loginEmail.value.trim();
     const password = loginPwd.value;
-
     if (
       validEmail.test(email) &&
       password.length >= 8 &&
@@ -454,6 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (user) {
         if (rememberMe.checked) {
           localStorage.setItem("rememberMe", "true");
+          localStorage.setItem("loggedInUserEmail", email);
         } else {
           localStorage.setItem("rememberMe", "false");
         }

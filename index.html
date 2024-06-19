@@ -42,7 +42,7 @@
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#products">Products</a>
+              <a class="nav-link" href="about.html">About</a>
             </li>
           </ul>
           <form class="d-flex" role="search">
@@ -56,10 +56,15 @@
               data-toggle="modal"
               data-target="#myModal"
               type="submit"
+              style="display: none"
             >
               Login
             </button>
-            <button class="btn btn-light signupBtn" type="submit">
+            <button
+              class="btn btn-light signupBtn"
+              style="display: none"
+              type="submit"
+            >
               Sign Up
             </button>
           </form>
@@ -71,6 +76,8 @@
         </div>
       </div>
     </nav>
+    <button id="scrollToTopBtn" class="scrollToTopBtn">↑</button>
+
     <!-- Modal -->
     <div
       class="modal fade"
