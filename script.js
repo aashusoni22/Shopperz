@@ -36,42 +36,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainContent = document.querySelector("#mainContent");
   let cartItems = [];
 
-  function shouldShowSignUp() {
-    if (
-      loginBtn.style.display !== "none" &&
-      signupBtn.style.display !== "none"
-    ) {
-      // Retrieve the count of refreshes from localStorage
-      let refreshCount = localStorage.getItem("refreshCount");
+  // function shouldShowSignUp() {
+  //   if (
+  //     loginBtn.style.display !== "none" &&
+  //     signupBtn.style.display !== "none"
+  //   ) {
+  //     // Retrieve the count of refreshes from localStorage
+  //     let refreshCount = localStorage.getItem("refreshCount");
 
-      // If refreshCount is not set or is less than 4, return false
-      if (!refreshCount || refreshCount < 3) {
-        return false;
-      }
+  //     // If refreshCount is not set or is less than 4, return false
+  //     if (!refreshCount || refreshCount < 3) {
+  //       return false;
+  //     }
 
-      // If refreshCount is 4 or 5, reset it to 0 and return true
-      if (refreshCount >= 3 && refreshCount <= 4) {
-        localStorage.setItem("refreshCount", 0); // Reset the count
-        return true;
-      }
-    }
-  }
+  //     // If refreshCount is 4 or 5, reset it to 0 and return true
+  //     if (refreshCount >= 3 && refreshCount <= 4) {
+  //       localStorage.setItem("refreshCount", 0); // Reset the count
+  //       return true;
+  //     }
+  //   }
+  // }
 
-  // Increment refresh count in localStorage
-  function incrementRefreshCount() {
-    let refreshCount = localStorage.getItem("refreshCount");
-    refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
-    localStorage.setItem("refreshCount", refreshCount);
-  }
+  // // Increment refresh count in localStorage
+  // function incrementRefreshCount() {
+  //   let refreshCount = localStorage.getItem("refreshCount");
+  //   refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
+  //   localStorage.setItem("refreshCount", refreshCount);
+  // }
 
-  // Check if it's time to show the sign-up popup
-  if (shouldShowSignUp()) {
-    signUpPop.style.display = "block";
-    mainContent.style.opacity = "40%";
-  }
+  // // Check if it's time to show the sign-up popup
+  // if (shouldShowSignUp()) {
+  //   signUpPop.style.display = "block";
+  //   mainContent.style.opacity = "40%";
+  // }
 
-  // Increment refresh count
-  incrementRefreshCount();
+  // // Increment refresh count
+  // incrementRefreshCount();
 
   // Function to set the session with expiration
   function setSession(email, expirationMinutes) {
@@ -294,13 +294,14 @@ document.addEventListener("DOMContentLoaded", () => {
       loadCartFromLocalStorage();
     }
   });
-  -function isUserLoggedIn() {
+
+  function isUserLoggedIn() {
     return (
       (loginBtn.style.display === "none" &&
         signupBtn.style.display === "none") ||
       (sessionStorage.getItem("userEmail") && isSessionValid())
     );
-  };
+  }
 
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -829,6 +830,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const bytes = CryptoJS.AES.decrypt(encryptedPassword, "your-secret-key");
     return bytes.toString(CryptoJS.enc.Utf8);
   }
+
   loadCartFromLocalStorage();
   updateCartPosition();
   fetchProducts();

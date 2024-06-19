@@ -357,8 +357,7 @@ footer {
   top: 233px;
 }
 
-.shoppingCart,
-.wishlistCart {
+.shoppingCart {
   width: 23rem;
   max-height: 80vh; /* Set a max-height to make the cart scrollable */
   position: fixed; /* Use fixed to avoid scrolling */
@@ -369,7 +368,8 @@ footer {
   z-index: 1;
   padding: 15px;
   overflow-y: auto; /* Make the cart scrollable */
-  background-color: #f5f5f5;
+  background-color: #292b2c;
+  color: white;
   display: flex;
   flex-direction: column;
 }
