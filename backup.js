@@ -75,69 +75,65 @@ document.addEventListener("DOMContentLoaded", () => {
   // Increment refresh count
   incrementRefreshCount();
 
-  let logoutTimer;
+  // // Function to set the session with expiration
+  // function setSession(email, expirationMinutes) {
+  //   const expirationTime = new Date().getTime() + expirationMinutes * 60 * 1000;
+  //   sessionStorage.setItem("userEmail", email);
+  //   sessionStorage.setItem("sessionExpiration", expirationTime);
+  // }
 
-  // Function to reset the logout timer
-  function resetLogoutTimer() {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => {
-      if (
-        localStorage.getItem("rememberMe") === "true" &&
-        loggedInProfile.style.display === "flex"
-      ) {
-        // Show the Bootstrap modal
-        const sessionModal = new bootstrap.Modal(
-          document.getElementById("sessionModal")
-        );
+  // // Function to check if the session is still valid
+  // function isSessionValid() {
+  //   const expirationTime = sessionStorage.getItem("sessionExpiration");
+  //   return new Date().getTime() < expirationTime;
+  // }
 
-        sessionModal.show();
+  // // Function to check if user is already logged in
+  // function isUserLoggedIn() {
+  //   const userEmail = sessionStorage.getItem("userEmail");
+  //   const isValidSession = isSessionValid();
+  //   return userEmail && isValidSession;
+  // }
 
-        setTimeout(() => {
-          sessionModal.hide();
-        }, 50000);
+  // let inactivityTimer;
 
-        document
-          .getElementById("extendSessionButton")
-          .addEventListener("click", () => {
-            resetLogoutTimer();
-            sessionModal.hide();
-          });
+  // // Function to log out the user
+  // function logoutUser() {
+  //   loginBtn.style.display = "block";
+  //   signupBtn.style.display = "block";
+  //   loggedInProfile.style.display = "none";
+  //   shoppingCartMenu.style.display = "none";
+  //   cartCount.style.display = "none";
 
-        document.getElementById("logoutModal").addEventListener("click", () => {
-          logout();
-          sessionModal.hide();
-        });
-      }
-    }, 15 * 60 * 1000); // 15 minutes
-  }
+  //   sessionStorage.removeItem("userEmail");
+  //   sessionStorage.removeItem("sessionExpiration");
 
-  function logout() {
-    // Clear user session data
-    loginBtn.style.display = "block";
-    signupBtn.style.display = "block";
-    loggedInProfile.style.display = "none";
-    shoppingCartMenu.style.display = "none";
-    cartCount.style.display = "none";
-    cartItems = [];
-    updateCartUI();
+  //   toast.innerHTML = `<div class="toast-header bg-danger text-white">
+  //     <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out due to inactivity!</strong>
+  //   </div>`;
+  //   toast.style.display = "block";
+  //   setTimeout(() => {
+  //     toast.style.display = "none";
+  //   }, 2000);
 
-    // Show logout success toast
-    toast.innerHTML = `<div class="toast-header bg-danger text-white">
-    <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
-  </div>`;
-    toast.style.display = "block";
-    setTimeout(() => {
-      toast.style.display = "none";
-    }, 2000);
+  //   cartItems = [];
+  //   updateCartUI();
+  // }
 
-    localStorage.setItem("rememberMe", "false");
-  }
+  // // Function to reset inactivity timer
+  // function resetInactivityTimer() {
+  //   clearTimeout(inactivityTimer);
+  //   inactivityTimer = setTimeout(logoutUser, 0.6 * 1000); // 1 minute
+  // }
 
-  // Add event listeners for user activity
-  document.addEventListener("mousemove", resetLogoutTimer);
-  document.addEventListener("keypress", resetLogoutTimer);
-  document.addEventListener("scroll", resetLogoutTimer);
-  document.addEventListener("click", resetLogoutTimer);
+  // // Initialize inactivity timer when the user logs in
+  // if (loggedUsername.style.display !== "none") {
+  //   document.addEventListener("mousemove", resetInactivityTimer);
+  //   document.addEventListener("keydown", resetInactivityTimer);
+  //   document.addEventListener("click", resetInactivityTimer);
+  //   document.addEventListener("scroll", resetInactivityTimer);
+  //   resetInactivityTimer();
+  // }
 
   async function fetchProducts() {
     fetch("https://fakestoreapi.com/products")
@@ -351,8 +347,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function isUserLoggedIn() {
-    if (loggedUsername.style.display === "block") return true;
-    else return false;
+    return (
+      loggedUsername.style.display !== "none"
+      // (sessionStorage.getItem("userEmail") && isSessionValid())
+    );
   }
 
   loginBtn.addEventListener("click", (e) => {
@@ -452,6 +450,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const user = checkUserInfo(email, password);
 
       if (user) {
+        // Set session expiration
+        // const sessionExpiration = new Date().getTime() + 60 * 1000; // 15 minutes from now
+        // localStorage.setItem("sessionExpiration", sessionExpiration);
+        // localStorage.setItem("loggedInUser", JSON.stringify(user));
+
         if (rememberMe.checked) {
           localStorage.setItem("rememberMe", "true");
         } else {
@@ -479,7 +482,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cartCount.style.display = "block";
         loggedUsername.textContent = user.email;
         cartItems = user.cartItems || [];
-        resetLogoutTimer(); // Start the logout timer
         updateCartUI();
       } else if (checkPassword(email, password)) {
         passwordIncorrect.innerText = "Password incorrect";
@@ -507,6 +509,10 @@ document.addEventListener("DOMContentLoaded", () => {
     shoppingCartMenu.style.display = "none";
     cartCount.style.display = "none";
 
+    // localStorage.removeItem("sessionExpiration");
+    // localStorage.removeItem("loggedInUser");
+    // localStorage.removeItem("rememberMe");
+
     // Show logout success toast
     toast.innerHTML = `<div class="toast-header bg-danger text-white">
     <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
@@ -517,8 +523,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
 
     cartItems = [];
-    localStorage.setItem("rememberMe", "false");
+    // Update the UI if necessary
   });
+
+  // function checkSession() {
+  //   const sessionExpiration = localStorage.getItem("sessionExpiration");
+  //   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  //   const rememberMe = localStorage.getItem("rememberMe") === "true";
+
+  //   if (sessionExpiration && new Date().getTime() < sessionExpiration) {
+  //     if (loggedInUser) {
+  //       loginBtn.style.display = "none";
+  //       signupBtn.style.display = "none";
+  //       loggedInProfile.style.display = "flex";
+  //       shoppingCartMenu.style.display = "block";
+  //       loggedUsername.textContent = loggedInUser.email;
+  //       cartItems = loggedInUser.cartItems || [];
+  //       updateCartUI();
+  //     }
+  //     // Extend session if remember me is checked
+  //     if (rememberMe) {
+  //       const newExpiration = new Date().getTime() + 15 * 60 * 1000;
+  //       localStorage.setItem("sessionExpiration", newExpiration);
+  //     }
+  //   } else {
+  //     // Clear session data if expired
+  //     localStorage.removeItem("sessionExpiration");
+  //     localStorage.removeItem("loggedInUser");
+  //     localStorage.removeItem("rememberMe");
+  //   }
+  // }
+
+  // checkSession();
+
+  // function extendSessionExpiration() {
+  //   const rememberMe = localStorage.getItem("rememberMe") === "true";
+  //   if (rememberMe) {
+  //     const newExpiration = new Date().getTime() + 15 * 60 * 1000;
+  //     localStorage.setItem("sessionExpiration", newExpiration);
+  //   }
+  // }
+
+  // // Call extendSessionExpiration() in relevant event listeners
+  // document.addEventListener("click", extendSessionExpiration);
 
   signUpRegister.addEventListener("click", (e) => {
     e.preventDefault();
@@ -755,6 +802,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return strength;
   }
 
+  // function updateCartPosition() {
+  //   const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  //   if (scrollTop > navbarHeight) {
+  //     shoppingCart.style.top = "0";
+  //   } else {
+  //     shoppingCart.style.top = `${navbarHeight - scrollTop}px`;
+  //   }
+  // }
+
+  // Listen to the scroll event
+  // window.addEventListener("scroll", updateCartPosition);
+
   function saveUserDetails(username, email, password) {
     const encryptedPassword = encryptPassword(password);
     const userInfo = {
@@ -827,6 +886,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadCartFromLocalStorage();
   updateCartUI();
+  // updateCartPosition();
   fetchProducts();
   clearErrorOnInput();
   clearInput();
