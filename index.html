@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
-    <title>Shopperz</title>
+    <title>Shopperz - Shop Smart, Shop Easy</title>
   </head>
   <body>
     <!-- Navbar -->
@@ -51,27 +51,74 @@
               ><span id="logged-username"></span>
               <i class="fa-solid fa-right-from-bracket"></i
             ></span>
-            <button class="btn btn-light loginBtn" type="submit">Login</button>
+            <button
+              class="btn btn-light loginBtn"
+              data-toggle="modal"
+              data-target="#myModal"
+              type="submit"
+            >
+              Login
+            </button>
             <button class="btn btn-light signupBtn" type="submit">
               Sign Up
             </button>
           </form>
+          <span
+            class="badge rounded-pill text-bg-primary cart-count"
+            style="position: absolute; display: none; top: 7px; right: 12px"
+          ></span>
           <i class="fa-solid fa-cart-shopping shoppingCartMenu"></i>
-          <i class="fa-solid fa-heart wishlistMenu"></i>
         </div>
       </div>
     </nav>
-
-    <div class="shoppingCart">
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="sessionModal"
+      tabindex="-1"
+      aria-labelledby="sessionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sessionModalLabel">Extend Session</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Your session is about to expire. Do you want to extend your session?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              id="logoutModal"
+            >
+              Logout
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="extendSessionButton"
+            >
+              Extend Session
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Shopping Cart -->
+    <div class="shoppingCart bg-dark text-white">
       <h3><i class="fa-solid fa-cart-shopping"></i> Shopping Cart</h3>
       <i class="fa-solid fa-xmark cart-close"></i>
       <div class="cartSection">
-        <p class="cartCount">No Items added yet</p>
         <hr />
-        <div class="cartFooter">
-          <h6 class="totalPrice">Total: <span>$00.00</span></h6>
-          <button class="btn btn-primary checkoutBtn">Checkout</button>
-        </div>
       </div>
     </div>
 
@@ -85,8 +132,6 @@
         </div>
       </section>
 
-      <!-- Featured Products -->
-
       <!-- Toast -->
       <div class="toast bg-success text-white fade show">
         <div class="toast-header bg-success text-white">
@@ -97,7 +142,6 @@
       </div>
 
       <!-- Products -->
-
       <section id="products">
         <h2 style="text-align: center" class="mt-5 products-h2">Products</h2>
         <div class="container mt-4">
