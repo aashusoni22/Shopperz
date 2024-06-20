@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginPopClose = document.querySelector(".loginPop-close");
   const signUpPop = document.querySelector("#signUpPop");
   const signUpPopClose = document.querySelector(".signUpPop-close");
-  const products = document.querySelector("#products");
   const createaccountLink = document.querySelector(".createaccount-link");
   const loginLink = document.querySelector(".login-link");
   const loginEmail = document.querySelector("#login-email");
@@ -28,112 +27,150 @@ document.addEventListener("DOMContentLoaded", () => {
   const showPwd = document.querySelector(".showPwdIcon");
   const shoppingCartMenu = document.querySelector(".shoppingCartMenu");
   const shoppingCart = document.querySelector(".shoppingCart");
-  const navbarHeight = document.querySelector(".navbar").offsetHeight;
   const userNotFound = document.getElementById("userNotFound");
   const passwordIncorrect = document.getElementById("passwordIncorrect");
   const cartClose = document.querySelector(".cart-close");
   const cartSection = document.querySelector(".cartSection");
   const mainContent = document.querySelector("#mainContent");
   const cartCount = document.querySelector(".cart-count");
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
   let cartItems = [];
+  let logoutTimer;
 
-  // Function to check if the sign-up popup should be shown
-  function shouldShowSignUp() {
-    if (
-      loginBtn.style.display !== "none" &&
-      signupBtn.style.display !== "none"
-    ) {
-      // Retrieve the count of refreshes from localStorage
-      let refreshCount = localStorage.getItem("refreshCount");
+  document.body.classList.add("js-enabled");
 
-      // If refreshCount is not set or is less than 4, return false
-      if (!refreshCount || refreshCount < 3) {
-        return false;
-      }
+  // // Function to check if the sign-up popup should be shown
+  // function shouldShowSignUp() {
+  //   if (isUserLoggedIn) {
+  //     // Retrieve the count of refreshes from localStorage
 
-      // If refreshCount is 4 or 5, reset it to 0 and return true
-      if (refreshCount >= 3 && refreshCount <= 4) {
-        localStorage.setItem("refreshCount", 0); // Reset the count
-        return true;
-      }
+  //     let refreshCount = localStorage.getItem("refreshCount");
+  //     // If refreshCount is not set or is less than 4, return false
+  //     if (!refreshCount || refreshCount < 3) {
+  //       return false;
+  //     }
+
+  //     // If refreshCount is 4 or 5, reset it to 0 and return true
+  //     if (refreshCount >= 3 && refreshCount <= 4) {
+  //       localStorage.setItem("refreshCount", 0); // Reset the count
+  //       return true;
+  //     }
+  //   }
+  // }
+
+  // // Increment refresh count in localStorage
+  // function incrementRefreshCount() {
+  //   let refreshCount = localStorage.getItem("refreshCount");
+  //   refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
+  //   localStorage.setItem("refreshCount", refreshCount);
+  // }
+
+  // // Check if it's time to show the sign-up popup
+  // if (shouldShowSignUp()) {
+  //   signUpPop.style.display = "block";
+  //   mainContent.style.opacity = "40%";
+  // }
+
+  // if (isUserLoggedIn) {
+  //   // Increment refresh count
+  //   incrementRefreshCount();
+  // }
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 200) {
+      scrollToTopBtn.style.display = "flex";
+    } else {
+      scrollToTopBtn.style.display = "none";
     }
+  });
+
+  scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  const sessionModal = new bootstrap.Modal(
+    document.getElementById("sessionModal")
+  );
+  // Function to reset the logout timer
+  function resetLogoutTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+      if (
+        localStorage.getItem("rememberMe") === "true" &&
+        loggedInProfile.style.display === "flex"
+      ) {
+        // Show the Bootstrap modal
+
+        sessionModal.show();
+
+        setTimeout(() => {
+          sessionModal.hide();
+          logout();
+        }, 50000);
+
+        document
+          .getElementById("extendSessionButton")
+          .addEventListener("click", () => {
+            resetLogoutTimer();
+            sessionModal.hide();
+          });
+
+        document.getElementById("logoutModal").addEventListener("click", () => {
+          logout();
+          sessionModal.hide();
+        });
+      }
+    }, 15 * 60 * 1000); // 15 minutes
   }
 
-  // Increment refresh count in localStorage
-  function incrementRefreshCount() {
-    let refreshCount = localStorage.getItem("refreshCount");
-    refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
-    localStorage.setItem("refreshCount", refreshCount);
+  function logout() {
+    // Clear user session data
+    loginBtn.style.display = "block";
+    signupBtn.style.display = "block";
+    loggedInProfile.style.display = "none";
+    shoppingCartMenu.style.display = "none";
+    cartCount.style.display = "none";
+    cartItems = [];
+    updateCartUI();
+
+    // Show logout success toast
+    toast.innerHTML = `<div class="toast-header bg-danger text-white">
+    <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
+  </div>`;
+    toast.style.display = "block";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 2000);
+
+    localStorage.setItem("rememberMe", "false");
   }
 
-  // Check if it's time to show the sign-up popup
-  if (shouldShowSignUp()) {
-    signUpPop.style.display = "block";
-    mainContent.style.opacity = "40%";
-  }
+  // Add event listeners for user activity
+  document.addEventListener("mousemove", resetLogoutTimer);
+  document.addEventListener("keypress", resetLogoutTimer);
+  document.addEventListener("scroll", resetLogoutTimer);
+  document.addEventListener("click", resetLogoutTimer);
+  document.addEventListener("mousedown", resetLogoutTimer);
+  document.addEventListener("mouseup", resetLogoutTimer);
 
-  // Increment refresh count
-  incrementRefreshCount();
-
-  // // Function to set the session with expiration
-  // function setSession(email, expirationMinutes) {
-  //   const expirationTime = new Date().getTime() + expirationMinutes * 60 * 1000;
-  //   sessionStorage.setItem("userEmail", email);
-  //   sessionStorage.setItem("sessionExpiration", expirationTime);
-  // }
-
-  // // Function to check if the session is still valid
-  // function isSessionValid() {
-  //   const expirationTime = sessionStorage.getItem("sessionExpiration");
-  //   return new Date().getTime() < expirationTime;
-  // }
-
-  // // Function to check if user is already logged in
-  // function isUserLoggedIn() {
-  //   const userEmail = sessionStorage.getItem("userEmail");
-  //   const isValidSession = isSessionValid();
-  //   return userEmail && isValidSession;
-  // }
-
-  // let inactivityTimer;
-
-  // // Function to log out the user
-  // function logoutUser() {
-  //   loginBtn.style.display = "block";
-  //   signupBtn.style.display = "block";
-  //   loggedInProfile.style.display = "none";
-  //   shoppingCartMenu.style.display = "none";
-  //   cartCount.style.display = "none";
-
-  //   sessionStorage.removeItem("userEmail");
-  //   sessionStorage.removeItem("sessionExpiration");
-
-  //   toast.innerHTML = `<div class="toast-header bg-danger text-white">
-  //     <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out due to inactivity!</strong>
-  //   </div>`;
-  //   toast.style.display = "block";
-  //   setTimeout(() => {
-  //     toast.style.display = "none";
-  //   }, 2000);
-
-  //   cartItems = [];
-  //   updateCartUI();
-  // }
-
-  // // Function to reset inactivity timer
-  // function resetInactivityTimer() {
-  //   clearTimeout(inactivityTimer);
-  //   inactivityTimer = setTimeout(logoutUser, 0.6 * 1000); // 1 minute
-  // }
-
-  // // Initialize inactivity timer when the user logs in
-  // if (loggedUsername.style.display !== "none") {
-  //   document.addEventListener("mousemove", resetInactivityTimer);
-  //   document.addEventListener("keydown", resetInactivityTimer);
-  //   document.addEventListener("click", resetInactivityTimer);
-  //   document.addEventListener("scroll", resetInactivityTimer);
-  //   resetInactivityTimer();
-  // }
+  window.addEventListener("load", () => {
+    resetLogoutTimer();
+    const remember = localStorage.getItem("rememberMe") === "true";
+    const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+    if (remember && isUserLoggedIn) {
+      loggedInProfile.style.display = "flex";
+      loggedUsername.textContent = loggedInUserEmail;
+      loginBtn.style.display = "none";
+      signupBtn.style.display = "none";
+      shoppingCartMenu.style.display = "flex";
+      cartCount.style.display = "block";
+    } else {
+      loginBtn.style.display = "block";
+      signupBtn.style.display = "block";
+    }
+    loadCartFromLocalStorage();
+  });
 
   async function fetchProducts() {
     fetch("https://fakestoreapi.com/products")
@@ -347,16 +384,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function isUserLoggedIn() {
-    return (
-      loggedUsername.style.display !== "none"
-      // (sessionStorage.getItem("userEmail") && isSessionValid())
-    );
+    return loggedInProfile.style.display === "flex";
   }
 
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     loginPop.style.display = "block";
     mainContent.style.opacity = "30%";
+    loginEmail.focus();
     if (signUpPop.style.display == "block") {
       signUpPop.style.display = "none";
     }
@@ -366,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     signUpPop.style.display = "block";
     mainContent.style.opacity = "30%";
+    signUpUsername.focus();
     if (loginPop.style.display == "block") {
       loginPop.style.display = "none";
     }
@@ -438,10 +474,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loginPopBtn.addEventListener("click", (e) => {
     e.preventDefault();
-
     const email = loginEmail.value.trim();
     const password = loginPwd.value;
-
     if (
       validEmail.test(email) &&
       password.length >= 8 &&
@@ -450,13 +484,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const user = checkUserInfo(email, password);
 
       if (user) {
-        // Set session expiration
-        // const sessionExpiration = new Date().getTime() + 60 * 1000; // 15 minutes from now
-        // localStorage.setItem("sessionExpiration", sessionExpiration);
-        // localStorage.setItem("loggedInUser", JSON.stringify(user));
-
         if (rememberMe.checked) {
           localStorage.setItem("rememberMe", "true");
+          localStorage.setItem("loggedInUserEmail", email);
         } else {
           localStorage.setItem("rememberMe", "false");
         }
@@ -482,6 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cartCount.style.display = "block";
         loggedUsername.textContent = user.email;
         cartItems = user.cartItems || [];
+        resetLogoutTimer(); // Start the logout timer
         updateCartUI();
       } else if (checkPassword(email, password)) {
         passwordIncorrect.innerText = "Password incorrect";
@@ -509,10 +540,6 @@ document.addEventListener("DOMContentLoaded", () => {
     shoppingCartMenu.style.display = "none";
     cartCount.style.display = "none";
 
-    // localStorage.removeItem("sessionExpiration");
-    // localStorage.removeItem("loggedInUser");
-    // localStorage.removeItem("rememberMe");
-
     // Show logout success toast
     toast.innerHTML = `<div class="toast-header bg-danger text-white">
     <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
@@ -523,49 +550,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
 
     cartItems = [];
-    // Update the UI if necessary
+    localStorage.setItem("rememberMe", "false");
   });
-
-  // function checkSession() {
-  //   const sessionExpiration = localStorage.getItem("sessionExpiration");
-  //   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  //   const rememberMe = localStorage.getItem("rememberMe") === "true";
-
-  //   if (sessionExpiration && new Date().getTime() < sessionExpiration) {
-  //     if (loggedInUser) {
-  //       loginBtn.style.display = "none";
-  //       signupBtn.style.display = "none";
-  //       loggedInProfile.style.display = "flex";
-  //       shoppingCartMenu.style.display = "block";
-  //       loggedUsername.textContent = loggedInUser.email;
-  //       cartItems = loggedInUser.cartItems || [];
-  //       updateCartUI();
-  //     }
-  //     // Extend session if remember me is checked
-  //     if (rememberMe) {
-  //       const newExpiration = new Date().getTime() + 15 * 60 * 1000;
-  //       localStorage.setItem("sessionExpiration", newExpiration);
-  //     }
-  //   } else {
-  //     // Clear session data if expired
-  //     localStorage.removeItem("sessionExpiration");
-  //     localStorage.removeItem("loggedInUser");
-  //     localStorage.removeItem("rememberMe");
-  //   }
-  // }
-
-  // checkSession();
-
-  // function extendSessionExpiration() {
-  //   const rememberMe = localStorage.getItem("rememberMe") === "true";
-  //   if (rememberMe) {
-  //     const newExpiration = new Date().getTime() + 15 * 60 * 1000;
-  //     localStorage.setItem("sessionExpiration", newExpiration);
-  //   }
-  // }
-
-  // // Call extendSessionExpiration() in relevant event listeners
-  // document.addEventListener("click", extendSessionExpiration);
 
   signUpRegister.addEventListener("click", (e) => {
     e.preventDefault();
@@ -802,18 +788,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return strength;
   }
 
-  // function updateCartPosition() {
-  //   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  //   if (scrollTop > navbarHeight) {
-  //     shoppingCart.style.top = "0";
-  //   } else {
-  //     shoppingCart.style.top = `${navbarHeight - scrollTop}px`;
-  //   }
-  // }
-
-  // Listen to the scroll event
-  // window.addEventListener("scroll", updateCartPosition);
-
   function saveUserDetails(username, email, password) {
     const encryptedPassword = encryptPassword(password);
     const userInfo = {
@@ -861,10 +835,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (user) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
+  //LOGIN: Check if the email & password from localstorage
   function checkUserInfo(email, password) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const user = users.find(
@@ -874,11 +850,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return user || null;
   }
 
+  //Password Encryption
   function encryptPassword(password) {
     return CryptoJS.AES.encrypt(password, "your-secret-key").toString();
   }
 
-  // Function to decrypt a password
+  //Password Decryption
   function decryptPassword(encryptedPassword) {
     const bytes = CryptoJS.AES.decrypt(encryptedPassword, "your-secret-key");
     return bytes.toString(CryptoJS.enc.Utf8);
@@ -886,7 +863,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadCartFromLocalStorage();
   updateCartUI();
-  // updateCartPosition();
   fetchProducts();
   clearErrorOnInput();
   clearInput();

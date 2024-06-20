@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginPopClose = document.querySelector(".loginPop-close");
   const signUpPop = document.querySelector("#signUpPop");
   const signUpPopClose = document.querySelector(".signUpPop-close");
-  const products = document.querySelector("#products");
   const createaccountLink = document.querySelector(".createaccount-link");
   const loginLink = document.querySelector(".login-link");
   const loginEmail = document.querySelector("#login-email");
@@ -28,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const showPwd = document.querySelector(".showPwdIcon");
   const shoppingCartMenu = document.querySelector(".shoppingCartMenu");
   const shoppingCart = document.querySelector(".shoppingCart");
-  const navbarHeight = document.querySelector(".navbar").offsetHeight;
   const userNotFound = document.getElementById("userNotFound");
   const passwordIncorrect = document.getElementById("passwordIncorrect");
   const cartClose = document.querySelector(".cart-close");
@@ -36,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainContent = document.querySelector("#mainContent");
   const cartCount = document.querySelector(".cart-count");
   const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
   let cartItems = [];
   let logoutTimer;
 
@@ -178,35 +177,55 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => response.json())
       .then((data) => {
         productsContainer.innerHTML = data
-          .map(
-            (product) => `
-            <div class="card" style="width: 17rem">
-            <span>
-              <img src= ${product.image} class="card-img-top" alt="${
+          .map((product) => {
+            // Generate the star rating HTML
+            const fullStars = Math.floor(product.rating.rate);
+            const halfStar = product.rating.rate % 1 >= 0.5 ? 1 : 0;
+            const emptyStars = 5 - fullStars - halfStar;
+
+            const starRatingHTML = `
+            ${`(${product.rating.count})`}
+                  ${'<i class="fa fa-star"></i> '.repeat(fullStars)}
+                  ${halfStar ? '<i class="fa fa-star-half-alt"></i>' : ""}
+                `;
+
+            return `
+                <div class="card" style="width: 17rem">
+                  <span>
+                    <img src="${product.image}" class="card-img-top" alt="${
               product.title
             }" />
-            </span> 
-            <div class="card-body">
-              <h5 class="card-title" style="font-size: 1rem;">${
-                product.title.length > 18
-                  ? product.title.slice(0, 18) + "..."
-                  : product.title
-              }</h5>
-              <p class="card-text">${
-                product.description.length > 33
-                  ? product.description.slice(0, 33) + "..."
-                  : product.description
-              }</p>
-              <p class="card-text">$${product.price}</p>
-              <div class="productButtons">
-                <a href="#" class="btn btn-primary itemCartBtn" data-id="${
-                  product.id
-                }"><i class="fa-solid fa-cart-plus"></i></a>
-              </div>
-            </div>
-          </div>
-        `
-          )
+                  </span>
+                  <div class="card-body">
+                    <h5 class="card-title" style="font-size: 1rem;">
+                      ${
+                        product.title.length > 18
+                          ? product.title.slice(0, 18) + "..."
+                          : product.title
+                      }
+                    </h5>
+                    <p class="card-text">
+                      ${
+                        product.description.length > 33
+                          ? product.description.slice(0, 33) + "..."
+                          : product.description
+                      }
+                    </p>
+                    <span class="rating-price">
+                      <p class="card-text">$${product.price}</p>
+                      <p class="card-text rating">${starRatingHTML}</p>
+                    </span>
+                    <div class="productButtons">
+                      <a href="#" class="btn btn-primary itemCartBtn" data-id="${
+                        product.id
+                      }">
+                        <i class="fa-solid fa-cart-plus"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                `;
+          })
           .join("");
 
         document.querySelectorAll(".itemCartBtn").forEach((button) => {
@@ -313,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <h6 class="totalPrice">Total: <span>$${totalPrice.toFixed(
               2
             )}</span></h6>
-            <button class="btn btn-primary checkoutBtn">Checkout</button>
+            <a href="checkout.html"><button class="btn btn-primary checkoutBtn">Checkout</button></a>
         </div>
     `;
     cartCount.innerText = cartItems.length;
@@ -518,7 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (checkPassword(email, password)) {
         passwordIncorrect.innerText = "Password incorrect";
         loginPop.style.height = "25.5rem";
-      } else if (checkEmail(loginEmail)) {
+      }
+      if (checkEmail(loginEmail)) {
         userNotFound.innerText = "User not found";
         loginPop.style.height = "25.5rem";
       }
@@ -830,16 +850,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function checkEmail(email) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
-    const user = users.find(
-      (user) => user.email !== email || user.email === null
-    );
+    const user = users.find((user) => user.email !== email);
 
     if (user) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
+  //LOGIN: Check if the email & password from localstorage
   function checkUserInfo(email, password) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const user = users.find(
@@ -849,11 +869,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return user || null;
   }
 
+  //Password Encryption
   function encryptPassword(password) {
     return CryptoJS.AES.encrypt(password, "your-secret-key").toString();
   }
 
-  // Function to decrypt a password
+  //Password Decryption
   function decryptPassword(encryptedPassword) {
     const bytes = CryptoJS.AES.decrypt(encryptedPassword, "your-secret-key");
     return bytes.toString(CryptoJS.enc.Utf8);

@@ -177,11 +177,22 @@ body.js-enabled .signupBtn {
   width: 100%;
 }
 
-.card span {
+.card > span {
   width: 100%;
   height: 12rem;
   display: flex;
   padding: 11px;
+}
+
+.rating .fa-star,
+.rating .fa-star-half-alt,
+.rating .fa-star-o {
+  color: gold;
+}
+
+.rating-price {
+  display: flex;
+  gap: 15px;
 }
 
 #loginPop {
