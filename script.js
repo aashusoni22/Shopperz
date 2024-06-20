@@ -538,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
         passwordIncorrect.innerText = "Password incorrect";
         loginPop.style.height = "25.5rem";
       }
-      if (checkEmail(loginEmail)) {
+      if (!checkEmail(loginEmail)) {
         userNotFound.innerText = "User not found";
         loginPop.style.height = "25.5rem";
       }

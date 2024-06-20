@@ -8,32 +8,64 @@
       rel="stylesheet"
     />
     <title>Checkout Page</title>
+    <style>
+      .checkout-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f8f8f8;
+      }
+      .checkout-item img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        object-fit: cover;
+      }
+      .checkout-item .details {
+        flex-grow: 1;
+      }
+      .checkout-item .details h6 {
+        margin: 0 0 5px;
+        font-size: 0.9rem;
+      }
+      .checkout-item .details .checkout-price {
+        color: #333;
+        font-weight: bold;
+      }
+      .checkout-item .details .form-control {
+        display: inline-block;
+        width: 50px;
+        font-size: 0.9rem;
+      }
+      .checkout-item button {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+    </style>
   </head>
   <body>
-    <div class="container mt-5">
-      <a href="index.html"
-        ><button
-          class="btn btn-outline-primary backBtn"
-          style="position: absolute; left: 60px; top: 20px; border-radius: 30px"
-        >
-          <i class="fa-solid fa-arrow-left"></i> Back
-        </button></a
-      >
-      <h1 class="mb-4">Checkout</h1>
-      <div class="row">
+    <div class="container mt-3 mb-5">
+      <a href="index.html" class="text-primary" style="text-decoration: none">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </a>
+      <h1 class="mb-4 mt-3">Checkout</h1>
+      <div class="row" style="justify-content: space-between">
         <!-- Cart Summary -->
         <div class="col-md-6">
           <h4>Cart Summary</h4>
-          <ul class="list-group mb-4" id="cart-summary">
+          <div class="list-group mb-4" id="cart-summary">
             <!-- Cart items will be dynamically inserted here -->
-          </ul>
-          <div class="d-flex justify-content-between">
+          </div>
+          <div class="d-flex justify-content-between" style="width: 100%">
             <strong>Total:</strong>
             <strong id="cart-total">$0.00</strong>
           </div>
         </div>
         <!-- Checkout Form -->
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
           <h4>Shipping Information</h4>
           <form id="checkout-form">
             <div class="mb-3">
@@ -97,6 +129,7 @@
         </div>
       </div>
     </div>
+    <script src="checkout.js"></script>
     <script
       src="https://kit.fontawesome.com/fe8b7c562d.js"
       crossorigin="anonymous"
