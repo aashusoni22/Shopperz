@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // If "Remember Me" is checked, allow 1 hour without activity
       logoutTimer = setTimeout(showSessionModal, 1440 * 60 * 1000); // 1 day
     } else if (loggedIn) {
-      // If "Remember Me" is not checked, allow 15 minutes without activity
+      // If "Remember Me" is not checked, allow 30 minutes without activity
       logoutTimer = setTimeout(showSessionModal, 30 * 60 * 1000); // 30 minutes
     }
   }
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalTimeout = setTimeout(() => {
       sessionModal.hide();
       logout();
-    }, 5000); // Hide modal and logout after 5 seconds if no action is taken
+    }, 10000); // Hide modal and logout after 10 minutes if no action is taken
 
     document
       .getElementById("extendSessionButton")
@@ -653,6 +653,8 @@ document.addEventListener("DOMContentLoaded", () => {
         shoppingCartMenu.style.display = "block";
         signUpPop.style.height = "28rem";
         cartCount.style.display = "block";
+        resetLogoutTimer();
+        localStorage.setItem("rememberMe", "true");
       }
       if (alreadyHaveAccount(signUpEmail.value)) {
         document.querySelector("#emailError").innerText =
