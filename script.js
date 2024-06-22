@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let cartItems = [];
   let logoutTimer;
+  let modalTimeout;
 
   document.body.classList.add("js-enabled");
 
@@ -92,52 +93,67 @@ document.addEventListener("DOMContentLoaded", () => {
   const sessionModal = new bootstrap.Modal(
     document.getElementById("sessionModal")
   );
-  // Function to reset the logout timer
+  document.addEventListener("DOMContentLoaded", () => {
+    resetLogoutTimer();
+
+    document.addEventListener("mousemove", resetLogoutTimer);
+    document.addEventListener("keypress", resetLogoutTimer);
+  });
+
   function resetLogoutTimer() {
     clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => {
-      if (
-        localStorage.getItem("rememberMe") === "true" &&
-        loggedInProfile.style.display === "flex"
-      ) {
-        // Show the Bootstrap modal
+    clearTimeout(modalTimeout);
 
-        sessionModal.show();
+    const rememberMe = localStorage.getItem("rememberMe") === "true";
+    const loggedIn = loggedInProfile.style.display === "flex";
 
-        setTimeout(() => {
-          sessionModal.hide();
-          logout();
-        }, 50000);
+    if (rememberMe && loggedIn) {
+      // If "Remember Me" is checked, allow 1 hour without activity
+      logoutTimer = setTimeout(showSessionModal, 1440 * 60 * 1000); // 1 day
+    } else if (loggedIn) {
+      // If "Remember Me" is not checked, allow 15 minutes without activity
+      logoutTimer = setTimeout(showSessionModal, 30 * 60 * 1000); // 30 minutes
+    }
+  }
 
-        document
-          .getElementById("extendSessionButton")
-          .addEventListener("click", () => {
-            resetLogoutTimer();
-            sessionModal.hide();
-          });
+  function showSessionModal() {
+    sessionModal.show();
 
-        document.getElementById("logoutModal").addEventListener("click", () => {
-          logout();
-          sessionModal.hide();
-        });
-      }
-    }, 15 * 60 * 1000); // 15 minutes
+    modalTimeout = setTimeout(() => {
+      sessionModal.hide();
+      logout();
+    }, 5000); // Hide modal and logout after 5 seconds if no action is taken
+
+    document
+      .getElementById("extendSessionButton")
+      .addEventListener("click", extendSession);
+    document.getElementById("logoutModal").addEventListener("click", logout);
+  }
+
+  function extendSession() {
+    clearTimeout(modalTimeout);
+    sessionModal.hide();
+    resetLogoutTimer();
   }
 
   function logout() {
+    clearTimeout(logoutTimer);
+    clearTimeout(modalTimeout);
+
     // Clear user session data
     loginBtn.style.display = "block";
     signupBtn.style.display = "block";
     loggedInProfile.style.display = "none";
     shoppingCartMenu.style.display = "none";
+    shoppingCart.style.display = "none";
     cartCount.style.display = "none";
     cartItems = [];
     updateCartUI();
 
     // Show logout success toast
     toast.innerHTML = `<div class="toast-header bg-danger text-white">
-    <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
-  </div>`;
+        <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
+    </div>`;
     toast.style.display = "block";
     setTimeout(() => {
       toast.style.display = "none";
@@ -145,14 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     localStorage.setItem("rememberMe", "false");
   }
-
-  // Add event listeners for user activity
-  document.addEventListener("mousemove", resetLogoutTimer);
-  document.addEventListener("keypress", resetLogoutTimer);
-  document.addEventListener("scroll", resetLogoutTimer);
-  document.addEventListener("click", resetLogoutTimer);
-  document.addEventListener("mousedown", resetLogoutTimer);
-  document.addEventListener("mouseup", resetLogoutTimer);
 
   window.addEventListener("load", () => {
     resetLogoutTimer();
@@ -197,20 +205,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }" />
                   </span>
                   <div class="card-body">
-                    <h5 class="card-title" style="font-size: 1rem;">
+                    <h5 class="card-title" style="font-size: 1rem; height: 40px;">
                       ${
-                        product.title.length > 18
-                          ? product.title.slice(0, 18) + "..."
+                        product.title.length > 40
+                          ? product.title.slice(0, 40) + "..."
                           : product.title
                       }
                     </h5>
-                    <p class="card-text">
-                      ${
-                        product.description.length > 33
-                          ? product.description.slice(0, 33) + "..."
-                          : product.description
-                      }
-                    </p>
+                    
                     <span class="rating-price">
                       <p class="card-text">$${product.price}</p>
                       <p class="card-text rating">${starRatingHTML}</p>
@@ -332,9 +334,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <h6 class="totalPrice">Total: <span>$${totalPrice.toFixed(
               2
             )}</span></h6>
-            <a href="checkout.html"><button class="btn btn-primary checkoutBtn">Checkout</button></a>
+            <a href= ${isUserLoggedIn ? "checkout.html" : "index.html"}><button
+            } class="btn btn-primary checkoutBtn">Checkout</button></a>
         </div>
     `;
+
+    if (cartItems.length === 0) {
+      document.querySelector(".checkoutBtn").disabled = true;
+    } else {
+      document.querySelector(".checkoutBtn").disabled = false;
+    }
     cartCount.innerText = cartItems.length;
     document.querySelectorAll(".fa-trash").forEach((button) => {
       button.addEventListener("click", (e) => {

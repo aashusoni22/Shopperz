@@ -13,25 +13,29 @@
         display: flex;
         align-items: center;
         margin-bottom: 10px;
-        padding: 10px;
+        padding: 13px 13px;
         border: 1px solid #ddd;
         border-radius: 5px;
-        background-color: #f8f8f8;
+        width: 414px;
+        justify-content: space-between;
       }
       .checkout-item img {
         width: 50px;
         height: 50px;
         margin-right: 10px;
-        object-fit: cover;
+        object-fit: contain;
       }
       .checkout-item .details {
-        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 5px 16px;
+        width: 195px;
       }
       .checkout-item .details h6 {
         margin: 0 0 5px;
         font-size: 0.9rem;
       }
-      .checkout-item .details .checkout-price {
+      .checkout-item .checkout-price {
         color: #333;
         font-weight: bold;
       }
@@ -39,10 +43,17 @@
         display: inline-block;
         width: 50px;
         font-size: 0.9rem;
+        height: 25px;
       }
-      .checkout-item button {
-        font-size: 0.8rem;
-        padding: 5px 10px;
+      .checkout-item i {
+        font-size: 1rem;
+        padding: 5px 5px;
+        cursor: pointer;
+      }
+
+      #cart-summary {
+        max-height: 70vh;
+        overflow: auto;
       }
     </style>
   </head>
@@ -54,12 +65,12 @@
       <h1 class="mb-4 mt-3">Checkout</h1>
       <div class="row" style="justify-content: space-between">
         <!-- Cart Summary -->
-        <div class="col-md-6">
+        <div class="col-md-6" style="width: 35%">
           <h4>Cart Summary</h4>
-          <div class="list-group mb-4" id="cart-summary">
+          <div class="list-group mb-4 mt-4" id="cart-summary">
             <!-- Cart items will be dynamically inserted here -->
           </div>
-          <div class="d-flex justify-content-between" style="width: 100%">
+          <div class="d-flex justify-content-between" style="width: 94%">
             <strong>Total:</strong>
             <strong id="cart-total">$0.00</strong>
           </div>

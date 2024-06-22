@@ -26,18 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
         <img src="${item.image}" alt="${item.title}">
         <div class="details">
           <h6>${
-            item.title.length > 16
-              ? item.title.slice(0, 16) + "..."
+            item.title.length > 35
+              ? item.title.slice(0, 35) + "..."
               : item.title
           }</h6>
           <span>Qty: <input type="number" name="qty" id="qty-${
             item.id
           }" value="${item.quantity}" min="1" class="form-control"></span>
-          <p class="checkout-price">$${(item.price * item.quantity).toFixed(
-            2
-          )}</p>
-        </div>
-        <button class="btn btn-danger" data-id="${item.id}">Remove</button>
+          </div>
+          <p class="checkout-price" style="margin-bottom:0">$${(
+            item.price * item.quantity
+          ).toFixed(2)}</p>
+       <i class="fa-solid fa-trash btn btn-danger" style="color: white; padding: 6px; font-size: 10px" data-id="${
+         item.id
+       }"></i>
       </div>
     `
       )
@@ -93,5 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    function checkIfLoggedIn() {
+      const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+      if (!loggedInUserEmail) {
+        window.location.href = "index.html";
+      }
+    }
+    checkIfLoggedIn();
+  });
+
+  checkIfLoggedIn();
   renderCheckoutItems();
 });
