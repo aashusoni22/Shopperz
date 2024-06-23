@@ -10,21 +10,23 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
     <title>Shopperz - Shop Smart, Shop Easy</title>
   </head>
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div class="container-fluid">
-        <img
-          src="logo.png"
-          width="25"
-          height="25"
-          class="d-inline-block align-top logo"
-          alt=""
-        />
-        <a class="navbar-brand mb-0 h1" href="#">Shopperz</a>
+        <span>
+          <img
+            src="images/logo.png"
+            width="25"
+            height="25"
+            class="d-inline-block align-top logo"
+            alt=""
+          />
+          <a class="navbar-brand mb-0 h1" href="#">Shopperz</a></span
+        >
         <button
           class="navbar-toggler"
           type="button"
@@ -42,7 +44,7 @@
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#products">Products</a>
+              <a class="nav-link" href="about.html">About Us</a>
             </li>
           </ul>
           <form class="d-flex" role="search">
@@ -56,21 +58,25 @@
               data-toggle="modal"
               data-target="#myModal"
               type="submit"
+              style="display: none"
             >
               Login
             </button>
-            <button class="btn btn-light signupBtn" type="submit">
+            <button
+              class="btn btn-light signupBtn"
+              style="display: none"
+              type="submit"
+            >
               Sign Up
             </button>
           </form>
-          <span
-            class="badge rounded-pill text-bg-primary cart-count"
-            style="position: absolute; display: none; top: 7px; right: 12px"
-          ></span>
+          <span class="badge rounded-pill text-bg-primary cart-count"></span>
           <i class="fa-solid fa-cart-shopping shoppingCartMenu"></i>
         </div>
       </div>
     </nav>
+    <button id="scrollToTopBtn" class="scrollToTopBtn">↑</button>
+
     <!-- Modal -->
     <div
       class="modal fade"
@@ -83,12 +89,6 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="sessionModalLabel">Extend Session</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
           </div>
           <div class="modal-body">
             Your session is about to expire. Do you want to extend your session?
@@ -182,7 +182,7 @@
         <br />
         <span class="remember-checkbox">
           <input type="checkbox" name="rememberMe" id="rememberMe" required />
-          <label for="rememberMe">Remember Me</label>
+          <label for="rememberMe">Remember Me for 24 hours</label>
         </span>
         <br />
         <input
