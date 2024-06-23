@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             item.id
           }" value="${item.quantity}" min="1" class="form-control"></span>
           </div>
-          <p class="checkout-price" style="margin-bottom:0">$${(
+          <p class="checkout-price" style="margin-bottom:0; margin-right: 11px;">$${(
             item.price * item.quantity
           ).toFixed(2)}</p>
        <i class="fa-solid fa-trash btn btn-danger" style="color: white; padding: 6px; font-size: 10px" data-id="${
@@ -105,6 +105,5 @@ document.addEventListener("DOMContentLoaded", () => {
     checkIfLoggedIn();
   });
 
-  checkIfLoggedIn();
   renderCheckoutItems();
 });

@@ -41,43 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.classList.add("js-enabled");
 
-  // // Function to check if the sign-up popup should be shown
-  // function shouldShowSignUp() {
-  //   if (isUserLoggedIn) {
-  //     // Retrieve the count of refreshes from localStorage
-
-  //     let refreshCount = localStorage.getItem("refreshCount");
-  //     // If refreshCount is not set or is less than 4, return false
-  //     if (!refreshCount || refreshCount < 3) {
-  //       return false;
-  //     }
-
-  //     // If refreshCount is 4 or 5, reset it to 0 and return true
-  //     if (refreshCount >= 3 && refreshCount <= 4) {
-  //       localStorage.setItem("refreshCount", 0); // Reset the count
-  //       return true;
-  //     }
-  //   }
-  // }
-
-  // // Increment refresh count in localStorage
-  // function incrementRefreshCount() {
-  //   let refreshCount = localStorage.getItem("refreshCount");
-  //   refreshCount = refreshCount ? parseInt(refreshCount) + 1 : 1;
-  //   localStorage.setItem("refreshCount", refreshCount);
-  // }
-
-  // // Check if it's time to show the sign-up popup
-  // if (shouldShowSignUp()) {
-  //   signUpPop.style.display = "block";
-  //   mainContent.style.opacity = "40%";
-  // }
-
-  // if (isUserLoggedIn) {
-  //   // Increment refresh count
-  //   incrementRefreshCount();
-  // }
-
   window.addEventListener("scroll", () => {
     if (window.scrollY > 200) {
       scrollToTopBtn.style.display = "flex";
@@ -93,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sessionModal = new bootstrap.Modal(
     document.getElementById("sessionModal")
   );
+
   document.addEventListener("DOMContentLoaded", () => {
     resetLogoutTimer();
 
@@ -109,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (rememberMe && loggedIn) {
       // If "Remember Me" is checked, allow 1 hour without activity
-      logoutTimer = setTimeout(showSessionModal, 1440 * 60 * 1000); // 1 day
+      logoutTimer = setTimeout(showSessionModal, 6 * 1000); // 1 day
     } else if (loggedIn) {
       // If "Remember Me" is not checked, allow 30 minutes without activity
       logoutTimer = setTimeout(showSessionModal, 30 * 60 * 1000); // 30 minutes
@@ -128,6 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .getElementById("extendSessionButton")
       .addEventListener("click", extendSession);
     document.getElementById("logoutModal").addEventListener("click", logout);
+
+    window.addEventListener("click", extendSession);
   }
 
   function extendSession() {
@@ -148,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
     shoppingCart.style.display = "none";
     cartCount.style.display = "none";
     cartItems = [];
-    updateCartUI();
 
     // Show logout success toast
     toast.innerHTML = `<div class="toast-header bg-danger text-white">
@@ -569,6 +534,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loggedInProfile.style.display = "none";
     shoppingCartMenu.style.display = "none";
     cartCount.style.display = "none";
+    window.location.href = `index.html`;
 
     // Show logout success toast
     toast.innerHTML = `<div class="toast-header bg-danger text-white">
@@ -701,6 +667,7 @@ document.addEventListener("DOMContentLoaded", () => {
   shoppingCartMenu.addEventListener("click", (event) => {
     event.stopPropagation();
     shoppingCart.classList.toggle("visible");
+    document.querySelector(".navbar-collapse").classList.remove("show");
   });
 
   document.addEventListener("click", (event) => {
@@ -854,7 +821,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const user = users.find((user) => user.email === email);
 
     if (user && decryptPassword(user.password) !== password) {
-      return true; // Password is incorrect
+      return true;
     }
     return false;
   }
