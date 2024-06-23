@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartCount = document.querySelector(".cart-count");
   const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
+
   let cartItems = [];
   let logoutTimer;
   let modalTimeout;
@@ -59,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("DOMContentLoaded", () => {
     resetLogoutTimer();
+
 
     document.addEventListener("mousemove", resetLogoutTimer);
     document.addEventListener("keypress", resetLogoutTimer);
@@ -380,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function isUserLoggedIn() {
     return loggedInProfile.style.display === "flex";
   }
+
 
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
