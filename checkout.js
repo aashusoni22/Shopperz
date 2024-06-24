@@ -105,5 +105,25 @@ document.addEventListener("DOMContentLoaded", () => {
     checkIfLoggedIn();
   });
 
+  // Function to generate a random tracking number
+  function generateTrackingNumber() {
+    return "TRK" + Math.floor(Math.random() * 1000000000);
+  }
+
+  // Handle the place order action
+  document.querySelector(".place-order").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (!document.getElementById("checkout-form").checkValidity()) {
+      document.getElementById("checkout-form").reportValidity();
+      return;
+    }
+
+    const trackingNumber = generateTrackingNumber();
+
+    // Redirect to the thank you page with the tracking number as a query parameter
+    window.location.href = `thankyou.html?trackingNumber=${trackingNumber}`;
+  });
+
   renderCheckoutItems();
 });

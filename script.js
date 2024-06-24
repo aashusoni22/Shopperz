@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (rememberMe && loggedIn) {
       // If "Remember Me" is checked, allow 1 hour without activity
-      logoutTimer = setTimeout(showSessionModal, 6 * 1000); // 1 day
+      logoutTimer = setTimeout(showSessionModal, 1440 * 60 * 1000); // 1 day
     } else if (loggedIn) {
       // If "Remember Me" is not checked, allow 30 minutes without activity
       logoutTimer = setTimeout(showSessionModal, 30 * 60 * 1000); // 30 minutes
@@ -125,13 +125,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
 
     localStorage.setItem("rememberMe", "false");
+    localStorage.removeItem("loggedInUserEmail");
+    localStorage.removeItem("newuser", true);
   }
 
   window.addEventListener("load", () => {
     resetLogoutTimer();
-    const remember = localStorage.getItem("rememberMe") === "true";
+
+    const signUpLoad = localStorage.getItem("newuser") === true;
     const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
-    if (remember && isUserLoggedIn) {
+
+    if (isUserLoggedIn()) {
+      loggedInProfile.style.display = "flex";
+      loggedUsername.textContent = loggedInUserEmail;
+      loginBtn.style.display = "none";
+      signupBtn.style.display = "none";
+      shoppingCartMenu.style.display = "flex";
+      cartCount.style.display = "block";
+      loadCartFromLocalStorage();
+    } else if (signUpLoad) {
       loggedInProfile.style.display = "flex";
       loggedUsername.textContent = loggedInUserEmail;
       loginBtn.style.display = "none";
@@ -142,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loginBtn.style.display = "block";
       signupBtn.style.display = "block";
     }
-    loadCartFromLocalStorage();
   });
 
   async function fetchProducts() {
@@ -378,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function isUserLoggedIn() {
-    return loggedInProfile.style.display === "flex";
+    return localStorage.getItem("loggedInUserEmail") !== null;
   }
 
   loginBtn.addEventListener("click", (e) => {
@@ -529,24 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   logoutProfile.addEventListener("click", () => {
-    loginBtn.style.display = "block";
-    signupBtn.style.display = "block";
-    loggedInProfile.style.display = "none";
-    shoppingCartMenu.style.display = "none";
-    cartCount.style.display = "none";
-    window.location.href = `index.html`;
-
-    // Show logout success toast
-    toast.innerHTML = `<div class="toast-header bg-danger text-white">
-    <strong class="me-auto"><i class="bi-gift-fill"></i> You are logged out!</strong>
-  </div>`;
-    toast.style.display = "block";
-    setTimeout(() => {
-      toast.style.display = "none";
-    }, 2000);
-
-    cartItems = [];
-    localStorage.setItem("rememberMe", "false");
+    logout();
   });
 
   signUpRegister.addEventListener("click", (e) => {
@@ -597,6 +591,8 @@ document.addEventListener("DOMContentLoaded", () => {
           signUpPwd.value
         )
       ) {
+        localStorage.setItem("newuser", true);
+        localStorage.setItem("loggedInUserEmail", signUpEmail.value);
         updateCartUI();
         toast.innerHTML = `<div class="toast-header bg-success text-white">
       <strong class="me-auto"><i class="bi-gift-fill"></i> Account Created Successfully!</strong>
@@ -620,7 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
         signUpPop.style.height = "28rem";
         cartCount.style.display = "block";
         resetLogoutTimer();
-        localStorage.setItem("rememberMe", "true");
+        localStorage.setItem("rememberMe", "false");
       }
       if (alreadyHaveAccount(signUpEmail.value)) {
         document.querySelector("#emailError").innerText =
