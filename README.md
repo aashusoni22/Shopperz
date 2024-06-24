@@ -1,4 +1,4 @@
-# Shopperz
+# Shopperz E:\Shopperz\images\logo.png
 
 Shopperz is an online shopping platform where users can browse products, add items to their cart, and complete the checkout process. The platform includes features for user authentication, product display, cart management, and order processing.
 
