@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartCount = document.querySelector(".cart-count");
   const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-
   let cartItems = [];
   let logoutTimer;
   let modalTimeout;
 
   document.body.classList.add("js-enabled");
 
+  //Scroll to top
   window.addEventListener("scroll", () => {
     if (window.scrollY > 200) {
       scrollToTopBtn.style.display = "flex";
@@ -54,13 +54,18 @@ document.addEventListener("DOMContentLoaded", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
+  //Close hamburger when the user click anywhere in window
+  window.addEventListener("click", () => {
+    document.querySelector(".navbar-collapse").classList.remove("show");
+  });
+
+  //Extend session modal
   const sessionModal = new bootstrap.Modal(
     document.getElementById("sessionModal")
   );
 
   document.addEventListener("DOMContentLoaded", () => {
     resetLogoutTimer();
-
 
     document.addEventListener("mousemove", resetLogoutTimer);
     document.addEventListener("keypress", resetLogoutTimer);
@@ -158,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Fetching products
   async function fetchProducts() {
     fetch("https://fakestoreapi.com/products")
       .then((response) => response.json())
@@ -247,6 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  //Add to cart
   function addItemToCart(productId) {
     fetch(`https://fakestoreapi.com/products/${productId}`)
       .then((response) => response.json())
@@ -266,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  //Update cart UI
   function updateCartUI() {
     const totalPrice = cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -339,16 +347,19 @@ document.addEventListener("DOMContentLoaded", () => {
     saveCartToLocalStorage(); // Save cart state after UI update
   }
 
+  //Close cart
   cartClose.addEventListener("click", () => {
     shoppingCart.classList.remove("visible");
   });
 
+  //Delete item from cart
   function removeItemFromCart(productId) {
     cartItems = cartItems.filter((item) => item.id != productId);
     updateCartUI();
     saveCartToLocalStorage();
   }
 
+  //Update cart item quantity
   function updateItemQuantity(productId, newQuantity) {
     const item = cartItems.find((item) => item.id === productId);
     if (item) {
@@ -358,6 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveCartToLocalStorage();
   }
 
+  //Save details to localstorage
   function saveCartToLocalStorage() {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const loggedInUser = users.find(
@@ -370,6 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Fetch from localstorage
   function loadCartFromLocalStorage() {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const loggedInUser = users.find(
@@ -382,6 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Check if the user is login in order to show the localstorage items
   document.addEventListener("DOMContentLoaded", () => {
     if (isUserLoggedIn()) {
       loadCartFromLocalStorage();
@@ -390,11 +404,12 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
   });
 
+  //Is user login?
   function isUserLoggedIn() {
     return localStorage.getItem("loggedInUserEmail") !== null;
   }
 
-
+  //Login Btn Navbar
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     loginPop.style.display = "block";
@@ -405,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Signup Btn Navbar
   signupBtn.addEventListener("click", (e) => {
     e.preventDefault();
     signUpPop.style.display = "block";
@@ -415,6 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Create account link in login pop up
   createaccountLink.addEventListener("click", () => {
     signUpPop.style.display = "block";
     if (loginPop.style.display == "block") {
@@ -435,6 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Login link in sign up pop up
   loginLink.addEventListener("click", () => {
     loginPop.style.display = "block";
     document.querySelector(".alreadyHaveAcc").innerText =
@@ -449,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     termscondition.classList.remove("my-shake");
   });
 
+  //Login pop up close button
   loginPopClose.addEventListener("click", () => {
     loginPop.style.display = "none";
     signUpPop.style.display = "none";
@@ -460,6 +479,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInput();
   });
 
+  //SIgn up pop up close up
   signUpPopClose.addEventListener("click", () => {
     signUpPop.style.display = "none";
     mainContent.style.opacity = "";
@@ -477,11 +497,14 @@ document.addEventListener("DOMContentLoaded", () => {
     pwdStrength.style.display = "none";
   });
 
+  //Validate email
   let validEmail =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.(com|net|org|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)$/;
 
+  //Login btn in login pop up window to login
   loginPopBtn.addEventListener("click", (e) => {
     e.preventDefault();
+
     const email = loginEmail.value.trim();
     const password = loginPwd.value;
     if (
@@ -542,10 +565,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Logout btn in navbar
   logoutProfile.addEventListener("click", () => {
     logout();
   });
 
+  //Sign up btn in signup pop window
   signUpRegister.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -651,6 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pwdBar.style.display = "none";
   });
 
+  //Show password icon
   showPwd.addEventListener("click", () => {
     if (signUpPwd.type === "password") {
       signUpPwd.type = "text";
@@ -663,14 +689,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Shopping Cart icon in navbar
   shoppingCartMenu.addEventListener("click", (event) => {
     event.stopPropagation();
     shoppingCart.classList.toggle("visible");
     document.querySelector(".navbar-collapse").classList.remove("show");
   });
 
+  // Check if the click is outside the cart and the toggle button
   document.addEventListener("click", (event) => {
-    // Check if the click is outside the cart and the toggle button
     if (
       !shoppingCart.contains(event.target) &&
       !shoppingCartMenu.contains(event.target)
@@ -679,10 +706,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //Shopping cart sidebar
   shoppingCart.addEventListener("click", (event) => {
-    event.stopPropagation(); // Prevent the click event inside the cart from propagating to the document
+    event.stopPropagation();
   });
 
+  //Show errors
   function displayError(element, message) {
     const errorElement = document.getElementById(`${element.id}Error`);
     if (errorElement) {
@@ -691,6 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
     element.classList.add("my-shake");
   }
 
+  //Clear error
   function clearErrors() {
     document.querySelectorAll(".error").forEach((errorElement) => {
       errorElement.innerText = "";
@@ -700,6 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //CLear error on input
   function clearErrorOnInput() {
     loginEmail.addEventListener("input", () => {
       loginPop.style.height = "24.5";
@@ -734,6 +765,7 @@ document.addEventListener("DOMContentLoaded", () => {
       termscondition.classList.remove("my-shake");
     });
 
+    //Password strength
     signUpPwd.addEventListener("input", () => {
       signUpPop.style.height = "30rem";
       pwdStrength.style.display = "flex";
@@ -761,6 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //Clear input when user login or sign up or close the pop up window
   function clearInput() {
     loginPopClose.addEventListener("click", () => {
       loginEmail.value = "";
@@ -770,6 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //Password strength
   function getPasswordStrength(password) {
     let strength = "Weak";
     if (password.length >= 8) {
@@ -786,6 +820,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return strength;
   }
 
+  //Save sign up details to storage
   function saveUserDetails(username, email, password) {
     const encryptedPassword = encryptPassword(password);
     const userInfo = {
@@ -805,6 +840,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Check if account already exists
   function alreadyHaveAccount(email) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const user = users.find((user) => user.email === email);
@@ -815,6 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Check if the password is incorrect for the existing user
   function checkPassword(email, password) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const user = users.find((user) => user.email === email);
@@ -825,6 +862,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
+  //Check if user exists
   function checkEmail(email) {
     const users = JSON.parse(localStorage.getItem("userInfo")) || [];
     const user = users.find((user) => user.email !== email);

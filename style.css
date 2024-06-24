@@ -508,6 +508,10 @@ body.js-enabled .signupBtn {
 
 /* Extra Small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+  .nav-item {
+    display: flex;
+  }
+
   .scrollToTopBtn {
     bottom: 20px;
     right: 20px;
@@ -529,9 +533,13 @@ body.js-enabled .signupBtn {
   #loginPop,
   #signUpPop {
     width: 75%;
-    padding: 20px;
+    padding: 37px;
     top: 30%;
     transform: translateX(-50%);
+  }
+
+  .showPwdIcon {
+    top: 231px;
   }
 
   .navbar-brand {
@@ -569,6 +577,21 @@ body.js-enabled .signupBtn {
   .cart-count {
     top: 125px;
     z-index: 1;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  #loginPop,
+  #signUpPop {
+    width: 75%;
+    padding: 21px;
+    top: 20%;
+    transform: translateX(-50%);
+  }
+
+  .showPwdIcon {
+    top: 215px;
+    right: 35px;
   }
 }
 
