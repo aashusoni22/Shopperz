@@ -19,18 +19,18 @@ Shopperz is an online shopping platform where users can browse products, add ite
 
 ### Installation
 
-1. **1. Clone the repository:**
+1. **Clone the repository:**
 
    ```sh
    git clone https://github.com/yourusername/shopperz.git
 
-2. **2. Navigate to the project directory**
+2. **Navigate to the project directory**
 
 ```sh
 cd shopperz
 ```
 
-3. **3. Open the index.html file in your browser to view the application.**
+3. **Open the index.html file in your browser to view the application.**
 
 
 ## Usage
