@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   //Close hamburger when the user click anywhere in window
-  window.addEventListener("click", () => {
+  document.getElementById("mainContent").addEventListener("click", () => {
     document.querySelector(".navbar-collapse").classList.remove("show");
   });
 
@@ -139,10 +139,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("load", () => {
     resetLogoutTimer();
 
+    const rememberMe = localStorage.getItem("rememberMe") === true;
     const signUpLoad = localStorage.getItem("newuser") === true;
     const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
 
-    if (isUserLoggedIn()) {
+    if ((isUserLoggedIn() && rememberMe) || (isUserLoggedIn() && !rememberMe)) {
       loggedInProfile.style.display = "flex";
       loggedUsername.textContent = loggedInUserEmail;
       loginBtn.style.display = "none";
@@ -412,6 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Login Btn Navbar
   loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    document.querySelector(".navbar-collapse").classList.remove("show");
     loginPop.style.display = "block";
     mainContent.style.opacity = "30%";
     loginEmail.focus();
@@ -423,6 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Signup Btn Navbar
   signupBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    document.querySelector(".navbar-collapse").classList.remove("show");
     signUpPop.style.display = "block";
     mainContent.style.opacity = "30%";
     signUpUsername.focus();
@@ -520,6 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("loggedInUserEmail", email);
         } else {
           localStorage.setItem("rememberMe", "false");
+          localStorage.setItem("loggedInUserEmail", email);
         }
 
         toast.innerHTML = `<div class="toast-header bg-success text-white">
@@ -567,6 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Logout btn in navbar
   logoutProfile.addEventListener("click", () => {
+    document.querySelector(".navbar-collapse").classList.remove("show");
     logout();
   });
 
