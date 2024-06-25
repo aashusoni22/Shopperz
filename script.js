@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.classList.remove("btn-success");
                 button.classList.add("btn-primary");
                 button.innerHTML = `<i class="fa-solid fa-cart-plus"></i>`;
-              }, 3000); // Adjust the delay as needed
+              }, 1500); // Adjust the delay as needed
               addItemToCart(productId);
             }
           });
