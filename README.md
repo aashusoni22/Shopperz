@@ -1,4 +1,4 @@
-# Shopperz E:\Shopperz\images\logo.png
+# Shopperz
 
 Shopperz is an online shopping platform where users can browse products, add items to their cart, and complete the checkout process. The platform includes features for user authentication, product display, cart management, and order processing.
 
@@ -63,11 +63,14 @@ cd shopperz
 ```plaintext
 .
 ├── index.html         # Main page displaying products
+├── about.html         # About page
 ├── checkout.html      # Checkout page
 ├── thankyou.html      # Thank you page after placing an order
-├── styles.css         # CSS for styling the application
+├── styles.css         # CSS for styling the index page
+├── checkout.css       # CSS for styling the checkout page
+├── thankyou.css       # CSS for styling the thankyou page
+├── script.js          # JavaScript for handling main page logic
 ├── checkout.js        # JavaScript for handling checkout logic
-├── index.js           # JavaScript for handling main page logic
 └── README.md          # Project documentation
 ```
 ## Contact
