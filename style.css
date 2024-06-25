@@ -512,6 +512,10 @@ body.js-enabled .signupBtn {
     display: flex;
   }
 
+  .navbar {
+    padding-bottom: 200px;
+  }
+
   .scrollToTopBtn {
     bottom: 20px;
     right: 20px;
