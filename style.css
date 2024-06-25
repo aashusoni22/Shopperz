@@ -607,11 +607,6 @@ body.js-enabled .signupBtn {
     height: 35px;
     font-size: 20px;
   }
-
-  .shoppingCart {
-    width: 80%;
-    max-height: 70vh;
-  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
@@ -622,11 +617,6 @@ body.js-enabled .signupBtn {
     width: 40px;
     height: 40px;
     font-size: 24px;
-  }
-
-  .shoppingCart {
-    width: 60%;
-    max-height: 80vh;
   }
 }
 
@@ -639,11 +629,6 @@ body.js-enabled .signupBtn {
     height: 50px;
     font-size: 30px;
   }
-
-  .shoppingCart {
-    width: 40%;
-    max-height: 80vh;
-  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
@@ -654,10 +639,5 @@ body.js-enabled .signupBtn {
     width: 40px;
     height: 40px;
     font-size: 25px;
-  }
-
-  .shoppingCart {
-    width: 20%;
-    max-height: 80vh;
   }
 }
